@@ -1,8 +1,9 @@
+import type Folder from "../../../models/folder";
 import client from "../client";
+import { toFolder } from "./mappers";
 
 import type {
     CreateFolderRequestDTO,
-    GetFolderResponseDTO,
     PageListFolderItemResponseDTO,
     SearchFoldersParamsDTO,
     ShareFolderRequestDTO,
@@ -22,17 +23,17 @@ export async function shareFolder(id: string, body: ShareFolderRequestDTO): Prom
     await client.post(`/folders/${id}/sharings`, body);
 }
 
-export async function getFolder(id: string): Promise<GetFolderResponseDTO> {
+export async function getFolder(id: string): Promise<Folder> {
     const { data } = await client.get(`/folders/${id}`);
-    return data;
+    return toFolder(data);
 }
 
-export async function getRootFolder(): Promise<GetFolderResponseDTO> {
+export async function getRootFolder(): Promise<Folder> {
     const { data } = await client.get("/folders/root");
-    return data;
+    return toFolder(data);
 }
 
-export async function getInboxFolder(): Promise<GetFolderResponseDTO> {
+export async function getInboxFolder(): Promise<Folder> {
     const { data } = await client.get("/folders/inbox");
-    return data;
+    return toFolder(data);
 }
