@@ -11,7 +11,7 @@ type Props = {
 
 function PathElement(element: FolderPath, openFolder: (id: string) => void) {
   return (
-    <a key={"path-element_" + element.id} onClick={() => openFolder(element.id)}>/{element.name}</a>
+    <a key={"path-element_" + element.id} onClick={() => openFolder(element.id)}>{element.name}</a>
   );
 }
 
