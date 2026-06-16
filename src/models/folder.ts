@@ -1,4 +1,4 @@
-export default interface Folder {
+export interface Folder {
     id: string;
     parentId: string | null;
     type: "ROOT" | "NORMAL" | "INBOX";
@@ -21,4 +21,9 @@ export interface FolderFile {
     sizeInBytes: number;
     contentType: string;
     createdAt: string;
+}
+
+export interface FolderPath {
+    id: string;
+    name: string;
 }
