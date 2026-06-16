@@ -1,0 +1,20 @@
+:root {
+    --surface-primary: #fafafa;
+    --surface-hover: #ececec;
+
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+
+    --border-default: #e5e7eb;
+
+    --divider-default: #9ca3af;
+
+    --scroll-thumb: #d1d5db;
+
+    --radius-sm: 6px;
+    --radius-md: 8px;
+
+    --spacing-xs: 6px;
+    --spacing-sm: 10px;
+    --spacing-md: 16px;
+}
