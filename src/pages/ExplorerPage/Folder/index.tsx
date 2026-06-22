@@ -1,9 +1,13 @@
 
-import type { Folder as FolderModel } from "../../../models/folder";
+import type { Folder as FolderModel, FolderPath } from "../../../models/folder";
+import Path from "../Path";
 import "./index.css";
 
 type Props = {
-  folder: FolderModel
+  folder: FolderModel,
+  loading: boolean,
+  pathElements: FolderPath[],
+  openFolder: (folderId: string) => void
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -24,61 +28,66 @@ const formatDate = (date: string): string => {
   });
 };
 
-export default function Folder({ folder }: Props) {
+export default function Folder({ folder, loading, pathElements, openFolder }: Props) {
 
   return (
     <div className="folder-container">
-      <div className="folder-header">
-        <h1 className="folder-name">{folder.name}</h1>
-        <p className="folder-type">{folder.type}</p>
-      </div>
+
+      <Path loading={loading} pathElements={pathElements} openFolder={openFolder} />
 
       {folder.subFolders.length > 0 && (
         <section className="section">
           <h2 className="section-title">Folders</h2>
           <div className="items-grid">
             {folder.subFolders.map((subFolder) => (
-              <div key={subFolder.id} className="item item-folder">
-                <div className="item-icon">📁</div>
-                <div className="item-details">
-                  <p className="item-name">{subFolder.name}</p>
+              <a onClick={() => openFolder(subFolder.id)} key={subFolder.id}>
+                <div className="item item-folder" >
+                  <div className="item-icon">📁</div>
+                  <div className="item-details">
+                    <p className="item-name">{subFolder.name}</p>
+                  </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </section>
-      )}
+      )
+      }
 
-      {folder.files.length > 0 && (
-        <section className="section">
-          <h2 className="section-title">Files</h2>
-          <div className="files-list">
-            <div className="files-header">
-              <div className="col-name">Name</div>
-              <div className="col-type">Type</div>
-              <div className="col-size">Size</div>
-              <div className="col-date">Creation Date</div>
+      {
+        folder.files.length > 0 && (
+          <section className="section">
+            <h2 className="section-title">Files</h2>
+            <div className="files-list">
+              <div className="files-header">
+                <div className="col-name">Name</div>
+                <div className="col-type">Type</div>
+                <div className="col-size">Size</div>
+                <div className="col-date">Creation Date</div>
+              </div>
+              {folder.files.map((file) => (
+                <div key={file.id} className="item item-file">
+                  <div className="col-name">
+                    <span className="file-icon">📄</span>
+                    {file.name}
+                  </div>
+                  <div className="col-type">{file.contentType}</div>
+                  <div className="col-size">{formatFileSize(file.sizeInBytes)}</div>
+                  <div className="col-date">{formatDate(file.createdAt)}</div>
+                </div>
+              ))}
             </div>
-            {folder.files.map((file) => (
-              <div key={file.id} className="item item-file">
-                <div className="col-name">
-                  <span className="file-icon">📄</span>
-                  {file.name}
-                </div>
-                <div className="col-type">{file.contentType}</div>
-                <div className="col-size">{formatFileSize(file.sizeInBytes)}</div>
-                <div className="col-date">{formatDate(file.createdAt)}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+          </section>
+        )
+      }
 
-      {folder.subFolders.length === 0 && folder.files.length === 0 && (
-        <div className="empty-state">
-          <p>This folder is empty</p>
-        </div>
-      )}
-    </div>
+      {
+        folder.subFolders.length === 0 && folder.files.length === 0 && (
+          <div className="empty-state">
+            <p>This folder is empty</p>
+          </div>
+        )
+      }
+    </div >
   );
 }
