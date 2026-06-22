@@ -37,7 +37,7 @@ export default function Folder({ folder }: Props) {
           <h2 className="section-title">Pastas</h2>
           <div className="items-grid">
             {folder.subFolders.map((subFolder) => (
-              <div key={subFolder.id} className="item folder-item">
+              <div key={subFolder.id} className="item item-folder">
                 <div className="item-icon">📁</div>
                 <div className="item-details">
                   <p className="item-name">{subFolder.name}</p>
@@ -59,7 +59,7 @@ export default function Folder({ folder }: Props) {
               <div className="col-date">Data de Criação</div>
             </div>
             {folder.files.map((file) => (
-              <div key={file.id} className="file-row">
+              <div key={file.id} className="item item-file">
                 <div className="col-name">
                   <span className="file-icon">📄</span>
                   {file.name}
