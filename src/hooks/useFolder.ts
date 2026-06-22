@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getFolder, getRootFolder, createFolder as createFolderApi } from "../api/drive/folders";
+import { getFolder, getRootFolder, createFolder as createFolderApi } from "../api/drive/folders/api";
 
 import type { Folder, FolderPath } from "../models/folder";
 
