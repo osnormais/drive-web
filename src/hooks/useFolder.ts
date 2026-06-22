@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { getFolder, getRootFolder, createFolder as createFolderApi } from "../api/drive/folders/api";
+import {
+    getFolder as getFolderApi,
+    getRootFolder as getRootFolderApi,
+    createFolder as createFolderApi,
+    getFolderPath as getFolderPathApi
+} from "../api/drive/folders/api";
 
 import type { Folder, FolderPath } from "../models/folder";
 
@@ -15,19 +20,10 @@ export function useFolder() {
         if (folder !== null)
             return;
 
-        getRootFolder()
-            .then(rootFolder => {
+        getRootFolderApi()
+            .then(async rootFolder => {
                 setFolder(rootFolder);
-                setPathElements([{ id: rootFolder.id, name: "/" }]);
-
-                setPathElements([
-                    { id: rootFolder.id, name: "/" },
-                    { id: rootFolder.id + "1", name: "pasta 1" },
-                    { id: rootFolder.id + "2", name: "pasta 2" },
-                    { id: rootFolder.id + "3", name: "pasta 3" },
-                    { id: rootFolder.id + "4", name: "pasta 4" },
-                ]);
-
+                setPathElements(await getFolderPathApi(rootFolder.id));
             })
             .finally(() => setLoading(false));
 
@@ -38,25 +34,9 @@ export function useFolder() {
         setLoading(true);
 
         try {
-            const parentFolder = folder!;
-            const newFolder = await getFolder(id);
+            const newFolder = await getFolderApi(id);
             setFolder(newFolder);
-
-            //TODO Buscar do endpoint /folders/{id}/path para obter o caminho completo do folder
-            if (newFolder.type === "ROOT")
-                setPathElements([{ id: newFolder.id, name: "/" }]);
-            else
-                setPathElements([{ id: parentFolder.id, name: parentFolder.name }, { id: newFolder.id, name: newFolder.name }]);
-
-
-            setPathElements([
-                { id: newFolder.id, name: "/" },
-                { id: newFolder.id + "1", name: "pasta 1" },
-                { id: newFolder.id + "2", name: "pasta 2" },
-                { id: newFolder.id + "3", name: "pasta 3" },
-                { id: newFolder.id + "4", name: "pasta 4" },
-            ]);
-
+            setPathElements(await getFolderPathApi(newFolder.id));
         } finally {
             setLoading(false);
         }

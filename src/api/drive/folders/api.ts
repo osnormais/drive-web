@@ -1,4 +1,4 @@
-import type { Folder } from "../../../models/folder";
+import type { Folder, FolderPath } from "../../../models/folder";
 import client from "../client";
 import { toFolder } from "./mappers";
 
@@ -36,4 +36,21 @@ export async function getRootFolder(): Promise<Folder> {
 export async function getInboxFolder(): Promise<Folder> {
     const { data } = await client.get("/folders/inbox");
     return toFolder(data);
+}
+
+export async function getFolderPath(id: string): Promise<FolderPath[]> {
+
+    let folder = await getFolder(id); //TODO: Remover quando o endpoint /folders/{id}/path estiver implementado
+
+    const pathElements: FolderPath[] = [{ id: folder.id, name: folder.name }];
+
+    console.log(folder);
+
+    while (folder.type === "NORMAL") {
+        folder = await getFolder(folder.parentId!);
+        pathElements.unshift({ id: folder.id, name: folder.name });
+    }
+
+
+    return pathElements
 }
