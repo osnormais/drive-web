@@ -1,0 +1,236 @@
+.folder-container {
+  padding: 24px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.folder-header {
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--color-border, #e0e0e0);
+  padding-bottom: 16px;
+}
+
+.folder-name {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--color-text, #000);
+}
+
+.folder-type {
+  font-size: 12px;
+  margin: 0;
+  color: var(--color-text-secondary, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--color-text, #000);
+}
+
+/* Pastas (Grid) */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--color-background-secondary, #f5f5f5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.item:hover {
+  background-color: var(--color-background-hover, #e8e8e8);
+  transform: translateY(-2px);
+}
+
+.folder-item {
+  gap: 12px;
+}
+
+.item-icon {
+  font-size: 32px;
+}
+
+.item-details {
+  width: 100%;
+  text-align: center;
+}
+
+.item-name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text, #000);
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Arquivos (Tabela) */
+.files-list {
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.files-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr;
+  background-color: var(--color-background-secondary, #f5f5f5);
+  border-bottom: 2px solid var(--color-border, #e0e0e0);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text, #000);
+  padding: 12px;
+  gap: 12px;
+}
+
+.file-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  gap: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.file-row:hover {
+  background-color: var(--color-background-secondary, #f5f5f5);
+}
+
+.file-row:last-child {
+  border-bottom: none;
+}
+
+.col-name,
+.col-type,
+.col-size,
+.col-date {
+  font-size: 13px;
+  color: var(--color-text, #000);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.file-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.col-type {
+  color: var(--color-text-secondary, #666);
+}
+
+.col-size {
+  text-align: right;
+  color: var(--color-text-secondary, #666);
+}
+
+.col-date {
+  text-align: right;
+  color: var(--color-text-secondary, #666);
+}
+
+/* Estado Vazio */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: var(--color-text-secondary, #999);
+  font-size: 16px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .folder-container {
+    padding: 16px;
+  }
+
+  .folder-name {
+    font-size: 22px;
+  }
+
+  .items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+
+  .files-header,
+  .file-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .files-header {
+    display: none;
+  }
+
+  .file-row {
+    padding: 16px;
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .col-name,
+  .col-type,
+  .col-size,
+  .col-date {
+    text-align: left;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  .col-size,
+  .col-date {
+    text-align: left;
+  }
+
+  .col-type::before {
+    content: 'Tipo: ';
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .col-size::before {
+    content: 'Tamanho: ';
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .col-date::before {
+    content: 'Data: ';
+    font-weight: 600;
+    margin-right: 4px;
+  }
+}
