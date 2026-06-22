@@ -1,7 +1,6 @@
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { useFolder } from "../../hooks/useFolder";
 import Folder from "./Folder";
-import Path from "./Path";
 
 
 function ExplorerPage() {
