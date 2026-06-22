@@ -6,24 +6,25 @@ type Props = {
   folder: FolderModel
 }
 
-export default function Folder({ folder }: Props) {
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-  };
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+};
 
-  const formatDate = (date: string): string => {
-    return new Date(date).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+const formatDate = (date: string): string => {
+  return new Date(date).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+export default function Folder({ folder }: Props) {
 
   return (
     <div className="folder-container">
@@ -34,7 +35,7 @@ export default function Folder({ folder }: Props) {
 
       {folder.subFolders.length > 0 && (
         <section className="section">
-          <h2 className="section-title">Pastas</h2>
+          <h2 className="section-title">Folders</h2>
           <div className="items-grid">
             {folder.subFolders.map((subFolder) => (
               <div key={subFolder.id} className="item item-folder">
@@ -50,13 +51,13 @@ export default function Folder({ folder }: Props) {
 
       {folder.files.length > 0 && (
         <section className="section">
-          <h2 className="section-title">Arquivos</h2>
+          <h2 className="section-title">Files</h2>
           <div className="files-list">
             <div className="files-header">
-              <div className="col-name">Nome</div>
-              <div className="col-type">Tipo</div>
-              <div className="col-size">Tamanho</div>
-              <div className="col-date">Data de Criação</div>
+              <div className="col-name">Name</div>
+              <div className="col-type">Type</div>
+              <div className="col-size">Size</div>
+              <div className="col-date">Creation Date</div>
             </div>
             {folder.files.map((file) => (
               <div key={file.id} className="item item-file">
@@ -75,7 +76,7 @@ export default function Folder({ folder }: Props) {
 
       {folder.subFolders.length === 0 && folder.files.length === 0 && (
         <div className="empty-state">
-          <p>Esta pasta está vazia</p>
+          <p>This folder is empty</p>
         </div>
       )}
     </div>
