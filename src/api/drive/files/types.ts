@@ -1,10 +1,10 @@
 export interface CreateFileRequestDTO {
-    parentFolderId?: string;
-    name?: string;
-    contentType?: string;
-    sizeInBytes?: number;
-    checksumValue?: string;
-    checksumAlgorithm?: "CRC_32" | "MD5" | "SHA_256";
+    parentFolderId: string;
+    name: string;
+    contentType: string;
+    sizeInBytes: number;
+    checksumValue: string;
+    checksumAlgorithm: "CRC_32" | "MD5" | "SHA_256";
 }
 
 export interface ListFileItemResponseDTO {

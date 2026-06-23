@@ -18,7 +18,7 @@ export async function downloadChunk(params: DownloadChunkParams): Promise<Blob> 
 
 export async function uploadChunk(
     params: UploadChunkParams,
-    data: ArrayBuffer
+    data: Blob
 ): Promise<void> {
     await client.post("/files/chunks", data, {
         headers: {

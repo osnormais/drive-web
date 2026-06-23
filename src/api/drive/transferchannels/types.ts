@@ -2,6 +2,7 @@ export interface CreateTransferChannelResponseDTO {
     id: string;
     type: string;
     totalChunks: number;
+    chunkSize: number;
     userId: string;
     fileId: string;
     maxParallelChunks: number;
@@ -13,6 +14,7 @@ export interface GetTransferChannelResponseDTO {
     id: string;
     type: string;
     totalChunks: number;
+    chunkSize: number;
     userId: string;
     fileId: string;
     maxParallelChunks: number;
@@ -22,6 +24,8 @@ export interface GetTransferChannelResponseDTO {
 
 export interface ChunkTokenDTO {
     index: number;
+    offset: number;
+    size: number;
     token: string;
 }
 

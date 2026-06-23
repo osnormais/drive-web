@@ -1,4 +1,4 @@
-import type Folder from "../../../models/folder";
+import type { Folder } from "../../../models/folder";
 import type {
     GetFolderResponseDTO
 } from "./types";
