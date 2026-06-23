@@ -1,56 +1,66 @@
 import { calculateChecksum } from "./checksum.service";
-
-import type { TransferChannel } from "../models/transferchannel";
-
-
-
 import {
     createTransferChannel,
     getTransferChannel,
     getTransferChannelTokens,
 } from "../api/drive/transferchannels/api";
-
-import {
-    uploadChunk
-} from "../api/storage/files/api";
-
-
+import { uploadChunk } from "../api/storage/files/api";
+import RangeManager from "./util/RangeManager";
 
 export interface UploadParams {
     file: File;
-    // active: boolean;
-    transferChannel: TransferChannel;
+    fileId: string;
 }
-
 
 export async function upload(params: UploadParams) {
+    const { file, fileId } = params;
 
-    const { file, transferChannel } = params;
+    let transferChannel = await createTransferChannel(fileId, "UPLOAD");
+    const rangeManager = new RangeManager(transferChannel.totalChunks);
 
-    const initialRange = "0-" + (Math.min(transferChannel.maxParallelChunks, transferChannel.totalChunks) - 1);
+    while (rangeManager.hasPending()) {
 
-    const { expiresAt, chunkTokens } = await getTransferChannelTokens(transferChannel.id, initialRange);
+        if (new Date(transferChannel.expiresAt).getTime() < (Date.now() + (1 * 60 * 1000))) {
+            transferChannel = await getTransferChannel(transferChannel.id);
+        }
 
-    const checksumAlgorithm = "MD5";
+        const batch = rangeManager.getNextBatch(transferChannel.maxParallelChunks);
+        const rangeString = batch.map(range => range.toString()).join(";");
 
-    for (const chunkToken of chunkTokens) {
+        const { chunkTokens } = await getTransferChannelTokens(transferChannel.id, rangeString);
 
-        const { offset, size, token } = chunkToken;
 
-        const chunk = file.slice(offset, offset + size);
-        const checksumValue = await calculateChecksum(chunk);
+        await processWithLimit(chunkTokens, transferChannel.maxParallelChunks, async (chunkToken) => {
+            const { index, offset, size, token } = chunkToken;
 
-        await uploadChunk({ checksumAlgorithm, checksumValue, chunkToken: token }, chunk);
+            const chunk = file.slice(offset, offset + size);
+            const checksumValue = await calculateChecksum(chunk);
 
+            await uploadChunk({ checksumAlgorithm: "MD5", checksumValue, chunkToken: token }, chunk);
+
+            rangeManager.markAsCompleted(index, index);
+        });
+    }
+}
+
+async function processWithLimit<T>(
+    items: T[],
+    limit: number,
+    processor: (item: T) => Promise<void>
+): Promise<void> {
+    const executing = new Set<Promise<void>>();
+
+    for (const item of items) {
+        const task = processor(item).finally(() => {
+            executing.delete(task);
+        });
+
+        executing.add(task);
+
+        if (executing.size >= limit) {
+            await Promise.race(executing);
+        }
     }
 
-
-
+    await Promise.all(executing);
 }
-
-async function up() {
-
-}
-
-
-

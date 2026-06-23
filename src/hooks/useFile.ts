@@ -25,14 +25,9 @@ import type { TransferChannel as TransferChannelModel } from "../models/transfer
 import { upload } from "../service/upload.service";
 
 export interface UploadState {
-    file: File;
+    fileId: string;
     active: boolean;
-    transferChannel: TransferChannelModel;
 }
-
-// function hasUploadState(uploadStates: UploadState[], fileId: string): boolean {
-//     return uploadStates.some(uploadState => uploadState.transferChannel.fileId === fileId);
-// }
 
 export function useFile() {
 
@@ -50,54 +45,17 @@ export function useFile() {
             checksumAlgorithm: "MD5"
         });
 
-        const transferChannel = await createTransferChannelApi(fileId, "UPLOAD");
+        setUploadStates(prevStates => [...prevStates, { fileId, active: true, }]);
 
-        setUploadStates(prevStates => [...prevStates, {
-            file,
-            transferChannel,
-            active: true,
-        }]);
+        upload({ file, fileId });
 
-        upload({ file, transferChannel });
-
-        // const uploadState = await createTransferChannel(fileId, file);
 
     }
 
 
-    const [file, setFile] = useState<FileModel | null>(null);
-    const [loading, setLoading] = useState(false);
-
-    async function downloadFileChunk(chunkToken: string): Promise<Blob> {
-
-        setLoading(true);
-
-        try {
-            return await downloadChunk({ chunkToken });
-        } finally {
-            setLoading(false);
-        }
-
-    }
-
-    async function uploadFileChunk(params: { chunkToken: string; checksumValue: string; checksumAlgorithm: string }, data: ArrayBuffer): Promise<void> {
-
-        setLoading(true);
-
-        try {
-            // await uploadChunk(params, data);
-        } finally {
-            setLoading(false);
-        }
-
-    }
 
     return {
         uploadFile
-        // file,
-        // loading,
-        // downloadFileChunk,
-        // uploadFileChunk
     };
 
 }
